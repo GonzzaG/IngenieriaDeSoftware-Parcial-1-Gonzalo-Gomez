@@ -10,10 +10,11 @@ namespace BEL
     public abstract class DirectorioComponente
     {
         public int Id {  get; set; }
-        public string Name { get; set; }
+        public string Nombre { get; set; }
 
         // Mostrar archivos y directorios
         public abstract void MostrarEstructura(int pNivel);
+        public abstract int ObtenerTamano();
 
         // Metodos para gestionar los elementos del DirectorioComponente
         // En virtual ya que los archivos no implementan estos metodos.
