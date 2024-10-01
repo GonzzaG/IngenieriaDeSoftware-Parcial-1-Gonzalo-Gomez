@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace DAL
 {
     public class ArchivoDAL
     {
+        static int mId;
         #region Métodos privados
         private static void ValorizarEntidad(Archivo pArchivo, DataRow pDr)
         {
@@ -20,12 +22,20 @@ namespace DAL
         }
         #endregion
 
+        public static int ProximoId()
+        {
+            if (mId == 0)
+                mId = new DAO().ObtenerUltimoId("Archivo", "Archivo_Id") + 1;
+
+            return mId;
+        }
+
         #region Métodos públicos
         public static int Guardar(Archivo pArchivo)
         {
             if (pArchivo.Id == 0) // no existe, Insertar
             {
-                pArchivo.Id = new DAO().ObtenerUltimoId("Archivo", "Archivo_Id") + 1; // Asumiendo que se usa un ID incremental
+                pArchivo.Id = ProximoId(); // Asumiendo que se usa un ID incremental
                 string mCommandText = $"INSERT INTO Archivo (Archivo_Id, Archivo_Nombre, Archivo_Tamano, Directorio_Id) VALUES ({pArchivo.Id}, '{pArchivo.Nombre}', {pArchivo.Tamano}, {pArchivo.DirectorioId})";
                 return new DAO().ExecuteNonQuery(mCommandText);
             }

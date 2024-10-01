@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5462ECD9-6F41-473C-85D9-83CA4223511C}</ProjectGuid>
+    <ProjectGuid>{5431A29F-AAC6-4F22-B627-3C8235CFB977}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DAL</RootNamespace>
-    <AssemblyName>DAL</AssemblyName>
+    <RootNamespace>Servicio</RootNamespace>
+    <AssemblyName>Servicio</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,16 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchivoDAL.cs" />
-    <Compile Include="DAO.cs" />
-    <Compile Include="DirectorioCompositeDAL.cs" />
+    <Compile Include="UaiOS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UsuarioDAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BEL\BEL.csproj">
       <Project>{25214f1a-c9ec-48a8-a00a-5b14c24f9bd7}</Project>
       <Name>BEL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{57ec5ceb-59cb-4774-b21c-9a53a5fd5b5b}</Project>
+      <Name>BLL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,44 +1,45 @@
 ﻿using BEL;
+using BLL;
+using Servicio;
 
 namespace UIOS
 {
     class Program
     {
         private static Usuario usuarioActual;
+        static string mNombreUsuario;
+        static string mContrasena;
 
         static void Main(string[] args)
         {
-            // Mostrar mensaje de bienvenida
-            Console.WriteLine("Bienvenido a UaiOS. Por favor, inicie sesión.");
+            // Verificar y obtener la instancia del sistema operativo con singleton de la capa de servicio
+            UaiOS mSistemaOperativo = UaiOS.ObtenerInstancia();
 
-            // Solicitar nombre de usuario y contraseña
-            IniciarSesion();
+            if (IniciarSesion(mSistemaOperativo))
+            {
+                Console.WriteLine($"Inicio de sesion correcto, Bienvenido a UaiOS {mNombreUsuario}");
+            }
+            else
+            {
+                Console.WriteLine("Inicio de sesión fallido. Por favor, intente de nuevo.");
+            }
+
+            Console.WriteLine("Bienvenido a UaiOS. Por favor, inicie sesión.");
 
             // Mostrar ruta actual y permitir comandos
             EjecutarComandos();
         }
 
-        private static void IniciarSesion()
+        static bool IniciarSesion(UaiOS pOS)
         {
             Console.Write("Nombre de usuario: ");
-            string mNombreUsuario = Console.ReadLine();
+            mNombreUsuario = Console.ReadLine();
 
             Console.Write("Contraseña: ");
-            string mContrasena = Console.ReadLine();
+            mContrasena = Console.ReadLine();
 
-            // Simulación de usuario para la demostración
-            usuarioActual = new Usuario(mNombreUsuario, mContrasena);
-
-            if (!usuarioActual.Validar(mContrasena))
-            {
-                Console.WriteLine("Nombre de usuario o contraseña incorrectos. Intente nuevamente.");
-                IniciarSesion();
-            }
-            else
-            {
-                Console.WriteLine($"Bienvenido {usuarioActual.Nombre}!");
-                usuarioActual.DirectorioRaiz = new DirectorioComposite("Raiz"); // Inicializar el directorio raíz
-            }
+            //valida el usuario en la capa de servicio
+            return pOS.IniciarSesion(mNombreUsuario, mContrasena);
         }
 
         private static void EjecutarComandos()

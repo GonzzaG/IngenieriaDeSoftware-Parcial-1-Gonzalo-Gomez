@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace DAL
 {
     public class DirectorioCompositeDAL
     {
+        static int mId;
         #region Métodos privados
         private static void ValorizarEntidad(DirectorioComposite pDirectorio, DataRow pDr)
         {
@@ -19,12 +21,20 @@ namespace DAL
         }
         #endregion
 
+        public static int ProximoId()
+        {
+            if (mId == 0)
+                mId = new DAO().ObtenerUltimoId("Directorio", "Directorio_Id") + 1;
+
+            return mId;
+        }
+
         #region Métodos basicos Guardar, Eliminar, Listar, Obtener
         public static int Guardar(DirectorioComposite pDirectorio)
         {
             if (pDirectorio.Id == 0) // no existe, Insertar
             {
-                pDirectorio.Id = new DAO().ObtenerUltimoId("Directorio", "Directorio_Id") + 1;
+                pDirectorio.Id = ProximoId();
                 string mCommandText = $"INSERT INTO Directorio (Directorio_Id, Directorio_Nombre, Padre_Id) VALUES ({pDirectorio.Id}, '{pDirectorio.Nombre}', {pDirectorio.PadreId})";
                 return new DAO().ExecuteNonQuery(mCommandText);
             }
@@ -75,7 +85,7 @@ namespace DAL
         // Se obtiene un directorio por su nombre y segun el id del padre, osea en el contexto en el que se encuentra
         public static DirectorioComposite ObtenerPorNombre(string pNombredirectorio, int pDirectorioActualId)
         {
-            string mCommandText = $"SELECT * FROM Directorio WHERE Directorio_Nombre = {pNombredirectorio} AND Padre_Id = {pDirectorioActualId}";
+            string mCommandText = $"SELECT * FROM Directorio WHERE Directorio_Nombre = '{pNombredirectorio}' AND Padre_Id = {pDirectorioActualId}";
             DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
             if (mDs.Tables.Count > 0 && mDs.Tables[0].Rows.Count > 0)
             {

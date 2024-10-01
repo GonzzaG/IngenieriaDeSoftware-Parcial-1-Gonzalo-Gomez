@@ -28,7 +28,14 @@ namespace BLL
 
         public Usuario Obtener(int pId)
         {
-            return UsuarioDAL.Obtener();
+            return UsuarioDAL.Obtener(pId);
         }
+
+        public Usuario ObtenerPorNombreYContrasena(string pNombre, string pContrasena)
+        {
+            return UsuarioDAL.ObtenerPorNombreYContrasena(pNombre, pContrasena);
+        }
+
+
     }
 }

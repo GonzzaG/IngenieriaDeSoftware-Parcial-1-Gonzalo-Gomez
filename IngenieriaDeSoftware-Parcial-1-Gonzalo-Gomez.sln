@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIOS", "UIOS\UIOS.csproj", "{4EEF8FB8-5419-482A-A4D6-2277EEB7C682}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servicio", "Servicio\Servicio.csproj", "{5431A29F-AAC6-4F22-B627-3C8235CFB977}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4EEF8FB8-5419-482A-A4D6-2277EEB7C682}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EEF8FB8-5419-482A-A4D6-2277EEB7C682}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EEF8FB8-5419-482A-A4D6-2277EEB7C682}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5431A29F-AAC6-4F22-B627-3C8235CFB977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5431A29F-AAC6-4F22-B627-3C8235CFB977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5431A29F-AAC6-4F22-B627-3C8235CFB977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5431A29F-AAC6-4F22-B627-3C8235CFB977}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

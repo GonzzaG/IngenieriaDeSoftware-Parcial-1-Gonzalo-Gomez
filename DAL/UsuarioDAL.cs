@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,28 +12,36 @@ namespace DAL
     public class UsuarioDAL
     {
         static int mId;
+
         #region Métodos privados
         private static void ValorizarEntidad(Usuario pUsuario, DataRow pDr)
         {
             pUsuario.Id = (int)pDr["Usuario_Id"];
-            pUsuario.Nombre = pDr["Usuario_Nombre"].ToString();
-            pUsuario.Contrasena = pDr["Usuario_Contrasena"].ToString();
+            pUsuario.EstablecerNombre(pDr["Usuario_Nombre"].ToString());
+            pUsuario.EstablecerContrasena(pDr["Usuario_Contrasena"].ToString()) ;
         }
         #endregion
 
+        public static int ProximoId()
+        {
+            if (mId == 0)
+                mId = new DAO().ObtenerUltimoId("Usuario", "Usuario_Id") + 1;
+
+            return mId;
+        }
 
         public static int Guardar(Usuario pUsuario)
         {
             if(pUsuario.Id == 0)
             {
-                pUsuario.Id = new DAO().ObtenerUltimoId("Usuario", "Usuario_Id") + 1;
+                pUsuario.Id = ProximoId();
                 string mCommandText = $"INSERT INTO Usuario (Usuario_Id, Usuario_Nombre, Usuario_Contrasena) " +
                     $"VALUES ({pUsuario.Id}, '{pUsuario.Nombre}', '{pUsuario.Contrasena}')";
                 return new DAO().ExecuteNonQuery(mCommandText);
             }
             else
             {
-                string mCommandText = $"UPDATE Usuario SET Usuario_Nombre = '{pUsuario.Nombre}, Usuario_Contrasena = {pUsuario.Contrasena} " +
+                string mCommandText = $"UPDATE Usuario SET Usuario_Nombre = '{pUsuario.Nombre}, Usuario_Contrasena = '{pUsuario.Contrasena}' " +
                     $"WHERE Usuario_Id = {pUsuario.Id}";
                 return new DAO().ExecuteNonQuery(mCommandText) ;
             }
@@ -75,6 +84,23 @@ namespace DAL
                 return null;
             }
 
+        }
+
+        public static Usuario ObtenerPorNombreYContrasena(string pNombre, string pContrasena)
+        {
+            string mCommandText = $"SELECT * FROM Usuario WHERE Usuario_Nombre = '{pNombre}' AND Usuario_Contrasena = '{pContrasena}'";
+            DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
+
+            if (mDs.Tables.Count > 0 && mDs.Tables[0].Rows.Count > 0)
+            {
+                Usuario mUsuario = new Usuario();
+                ValorizarEntidad(mUsuario, mDs.Tables[0].Rows[0]);
+                return mUsuario;
+            }
+            else
+            {
+                return null;
+            }
         }
 
 

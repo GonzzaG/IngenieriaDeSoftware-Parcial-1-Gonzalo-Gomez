@@ -22,9 +22,9 @@ namespace BLL
             return;
         }
 
-        public static List<Archivo> Listar()
+        public static List<Archivo> Listar(int pDirectorioId)
         {
-            return ArchivoDAL.Listar();
+            return ArchivoDAL.Listar(pDirectorioId);
         }
 
 

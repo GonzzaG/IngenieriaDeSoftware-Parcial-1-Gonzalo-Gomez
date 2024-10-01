@@ -9,9 +9,21 @@ namespace BEL
     public class Usuario
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Contrasena { get; set; }
+        public string _nombre { get; set; }
+        public string _contrasena { get; set; }
         public DirectorioComponente DirectorioRaiz {  get; set; }
+
+        public string Nombre
+        {
+            get { return _nombre; }
+            private set { _nombre = value; }
+        }
+
+        public string Contrasena
+        {
+            get { return _contrasena; }
+            private set { _contrasena = value; }
+        }
 
         public Usuario() { }
         public Usuario(string pNombre, string pContrasena)
@@ -19,6 +31,16 @@ namespace BEL
             Nombre = pNombre;
             Contrasena = pContrasena;
             DirectorioRaiz = new DirectorioComposite("Raiz");
+        }
+
+        public void EstablecerNombre(string pNombre)
+        {
+            _nombre = pNombre;
+        }
+
+        public void EstablecerContrasena(string pContrasena)
+        {
+            _contrasena = pContrasena;
         }
 
         public bool Validar (string pContrasena)
@@ -32,6 +54,13 @@ namespace BEL
             {
                 DirectorioRaiz.MostrarEstructura(0);
             }
+        }
+        
+
+
+        public void CambiarContrasena()
+        {
+
         }
 
     }
