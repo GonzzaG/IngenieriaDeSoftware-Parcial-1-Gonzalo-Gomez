@@ -51,7 +51,7 @@ namespace DAL
             new DAO().ExecuteNonQuery(mCommandText);
         }
 
-        public static List<DirectorioComponente> Listar(int pPadreId)
+        public static List<DirectorioComponente> ListarComponentes(int pPadreId)
         {
             string mCommandText = "SELECT * FROM Directorio WHERE Padre_Id = " + pPadreId;
             DataSet mDs = new DAO().ExecuteDataSet(mCommandText);

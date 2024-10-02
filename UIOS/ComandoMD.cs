@@ -22,7 +22,7 @@ namespace UIOS
         {
             if(pArgumentos.Length != 1)
             {
-                Console.WriteLine("Uso: MD nombredirectorio");
+                Console.WriteLine("Uso: MD nombreDirectorio");
                 return;
             }
 

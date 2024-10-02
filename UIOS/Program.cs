@@ -84,35 +84,33 @@ namespace UIOS
                         mComandoActual = new ComandoCD(pSistemaOperativo);
                         mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
 
-                        string directorioDestino = partesComando[1];
-                        CambiarDirectorio(directorioDestino);
                         break;
 
                     case "CD..":
                         // Retroceder al directorio padre
-                        if (partesComando.Length < 2)
+                        if(partesComando.Length > 2)
                         {
                             Console.WriteLine("Uso: CD nombredirectorio");
-                            break;
                         }
 
                         mComandoActual = new ComandoCDBack(pSistemaOperativo);
                         mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
-
-                        string directorioDestino = partesComando[1];
-                        CambiarDirectorio(directorioDestino);
+                        
                         break;
                     case "MF":
                         // Crear un nuevo archivo
                         if (partesComando.Length < 3)
                         {
-                            Console.WriteLine("Uso: MF nombrearchivo tamaño");
+                            Console.WriteLine("Uso: MF nombrearchivo (tamaño)");
                             break;
                         }
-                        string nombreArchivo = partesComando[1];
+                        string mNombreArchivo = partesComando[1];
+
                         if (int.TryParse(partesComando[2], out int tamañoArchivo))
                         {
-                            CrearArchivo(nombreArchivo, tamañoArchivo);
+                            mComandoActual = new ComandoMF(pSistemaOperativo);
+                            mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
+                            CrearArchivo(mNombreArchivo, tamañoArchivo);
                         }
                         else
                         {

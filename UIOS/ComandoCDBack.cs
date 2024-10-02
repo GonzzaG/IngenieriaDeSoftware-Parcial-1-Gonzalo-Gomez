@@ -20,29 +20,38 @@ namespace UIOS
 
         public void Ejecutar(string[] pArgumentos)
         {
-            if (pArgumentos.Length != 1)
+            if (pArgumentos.Length != 0)
             {
-                Console.WriteLine("Uso: CD.. nombredirectorio");
+                Console.WriteLine("Uso: MD nombreDirectorio");
                 return;
             }
 
-            string mNombreDirectorio = pArgumentos[0];
+            // Obtenemos el directorio Actual
+            DirectorioComposite mDirectorioActual = (DirectorioComposite)_UaiOS.ObtenerDirectorioActual();
 
-            Usuario usuarioActual = _UaiOS.ObtenerUsuarioConectado();
-           
-
-             //implementacion para verificar si tiene padre, si tiene se va al directorio de arriba y se carga ruta
-
-            // Si no existe, notificamos
-            if (mNuevoDirectorio == null)
+            //validamos si el directorio actual tiene padre para retroceder
+            if (mDirectorioActual.PadreId == null)
             {
-                Console.WriteLine($"Error: El directorio '{mNombreDirectorio}' no existe.");
-                return;
+                Console.WriteLine("Ya se encuentra en el directorio raiz.");
+            }
+            else
+            {
+                //si tiene un directorio padre, verificamos en la base de datos
+                DirectorioComposite mDirectorioPadre = new DirectorioBL().ObtenerPorId((int)mDirectorioActual.PadreId);
+
+                // Validamos si realmente existe en la base de datos el directorio padre
+                if(mDirectorioPadre == null)
+                {
+                    Console.WriteLine("Ya se encuentra en el directorio raiz.");
+                }
+                else
+                {
+
+                    _UaiOS.CambiarDirectorio(mDirectorioPadre);
+                    Console.WriteLine("Retrocedio un directorio");
+                }
             }
 
-            // Si existe, cambiamos el directorio, pasando como parametro un nuevo directorio actual
-            _UaiOS.CambiarDirectorio(mNuevoDirectorio);
-            Console.WriteLine($"Cambiado al directorio '{mNombreDirectorio}'.");
         }
     }
 }

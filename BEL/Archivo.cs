@@ -10,7 +10,7 @@ namespace BEL
 {
     public class Archivo : DirectorioComponente
     {
-        public int Tamano {  get; set; }
+        public float Tamano {  get; set; }
         public int DirectorioId { get; set; }
 
         public Archivo() { }

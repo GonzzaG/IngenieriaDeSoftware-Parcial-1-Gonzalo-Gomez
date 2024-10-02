@@ -60,6 +60,11 @@ namespace Servicio
             return _DirectorioActual;
         }
 
+        public int ObtenerTamanoDirectorio(DirectorioComponente pDirectorio)
+        {
+            
+        }
+
         private string ConstruirRutaDesdeDirectorio(DirectorioComponente pNuevoDirectorioActual)
         {
             var ruta = new List<string>();

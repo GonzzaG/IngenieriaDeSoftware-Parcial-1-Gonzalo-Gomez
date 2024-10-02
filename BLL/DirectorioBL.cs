@@ -29,9 +29,9 @@ namespace BLL
             return;
         }
 
-        public List<DirectorioComponente> ListarDirectorios(int pDirectorioPadreId)
+        public List<DirectorioComponente> ListarComponentes(int pDirectorioPadreId)
         {
-            return DirectorioCompositeDAL.Listar(pDirectorioPadreId);
+            return DirectorioCompositeDAL.ListarComponentes(pDirectorioPadreId);
         }
 
         public DirectorioComposite Obtener(int pId, int pPadreId)

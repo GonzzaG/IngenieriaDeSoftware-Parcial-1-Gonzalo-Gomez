@@ -36,12 +36,12 @@ namespace DAL
             if (pArchivo.Id == 0) // no existe, Insertar
             {
                 pArchivo.Id = ProximoId(); // Asumiendo que se usa un ID incremental
-                string mCommandText = $"INSERT INTO Archivo (Archivo_Id, Archivo_Nombre, Archivo_Tamano, Directorio_Id) VALUES ({pArchivo.Id}, '{pArchivo.Nombre}', {pArchivo.Tamano}, {pArchivo.DirectorioId})";
+                string mCommandText = $"INSERT INTO Archivo (Archivo_Id, Archivo_Nombre, Directorio_Id, Archivo_Tamano) VALUES ({pArchivo.Id}, '{pArchivo.Nombre}', {pArchivo.DirectorioId}, {pArchivo.Tamano})";
                 return new DAO().ExecuteNonQuery(mCommandText);
             }
             else // ya existe, modificar
             {
-                string mCommandText = $"UPDATE Archivo SET Archivo_Nombre = '{pArchivo.Nombre}', Archivo_Tamano = {pArchivo.Tamano}, Directorio_Id = {pArchivo.DirectorioId} WHERE Archivo_Id = {pArchivo.Id}";
+                string mCommandText = $"UPDATE Archivo SET Archivo_Nombre = '{pArchivo.Nombre}',Directorio_Id = {pArchivo.DirectorioId}, Archivo_Tamano = {pArchivo.Tamano}  WHERE Archivo_Id = {pArchivo.Id}";
                 return new DAO().ExecuteNonQuery(mCommandText);
             }
         }
@@ -66,9 +66,9 @@ namespace DAL
             return listArchivos;
         }
 
-        public static Archivo Obtener(int pId, int pPadreId)
+        public static Archivo Obtener(int pId, int pDirectorioId)
         {
-            string mCommandText = $"SELECT * FROM Archivo WHERE Archivo_Id = {pId} AND Padre_Id = {pPadreId}";
+            string mCommandText = $"SELECT * FROM Archivo WHERE Archivo_Id = {pId} AND Directorio_Id = {pDirectorioId}";
             DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
             if (mDs.Tables.Count > 0 && mDs.Tables[0].Rows.Count > 0)
             {
@@ -82,6 +82,22 @@ namespace DAL
             }
         }
         #endregion
+
+        public static Archivo ObtenerPorNombre(string pArchivo, int pDirectorioId)
+        {
+            string mCommandText = $"SELECT * FROM Archivo WHERE Archivo_Nombre = '{pArchivo}' AND Directorio_Id = {pDirectorioId}";
+            DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
+            if (mDs.Tables.Count > 0 && mDs.Tables[0].Rows.Count > 0)
+            {
+                Archivo mArchivo = new Archivo();
+                ValorizarEntidad(mArchivo, mDs.Tables[0].Rows[0]);
+                return mArchivo;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
     }
 }

@@ -23,18 +23,16 @@ namespace UIOS
         {
             if (pArgumentos.Length != 1)
             {
-                Console.WriteLine("Uso: CD nombredirectorio");
+                Console.WriteLine("Uso: CD nombreDirectorio");
                 return;
             }
 
             string mNombreDirectorio = pArgumentos[0];
 
-            Usuario usuarioActual = _UaiOS.ObtenerUsuarioConectado();
             DirectorioComposite mDirectorioActual = (DirectorioComposite)_UaiOS.ObtenerDirectorioActual();
-
             DirectorioComposite mNuevoDirectorio = null;
 
-            mDirectorioActual.ListarComponentes(new DirectorioBL().ListarDirectorios(mDirectorioActual.Id));
+            mDirectorioActual.ListarComponentes(new DirectorioBL().ListarComponentes(mDirectorioActual.Id));
             // Se recorren los componentes del directorio actual para verificar si existe el archivo buscado
             // con ese nombre
             foreach (DirectorioComposite pComponente in mDirectorioActual.ObtenerComponentes())

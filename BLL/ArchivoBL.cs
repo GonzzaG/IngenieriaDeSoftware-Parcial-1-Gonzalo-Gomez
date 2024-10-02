@@ -15,24 +15,27 @@ namespace BLL
             return ArchivoDAL.Guardar(pArchivo);
         }
 
-        public static void Eliminar(Archivo pArchivo)
+        public void Eliminar(Archivo pArchivo)
         {
             ArchivoDAL.Eliminar(pArchivo);
 
             return;
         }
 
-        public static List<Archivo> Listar(int pDirectorioId)
+        public List<Archivo> Listar(int pDirectorioId)
         {
             return ArchivoDAL.Listar(pDirectorioId);
         }
 
 
-        public static Archivo Obtener(int pId, int pPadreId)
+        public Archivo Obtener(int pId, int pPadreId)
         {
             return ArchivoDAL.Obtener(pId, pPadreId);
         }
 
-
+        public Archivo ObtenerPorNombre(string pArchivo, int pPadreId)
+        {
+            return ArchivoDAL.ObtenerPorNombre(pArchivo, pPadreId); 
+        }
     }
 }
