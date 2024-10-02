@@ -12,59 +12,74 @@ namespace DAL
 {
     public class DAO : IDisposable
     {
-        readonly SqlConnection mCon = new SqlConnection(ConfigurationManager.ConnectionStrings["mStrCon"].ConnectionString);
+        SqlConnection mCon = new SqlConnection("Data Source=.;Initial Catalog=ISParcial;Integrated Security=True");
 
 
         public DataSet ExecuteDataSet(string pCommandText)
         {
             try
             {
-                using (SqlDataAdapter mDa = new SqlDataAdapter(pCommandText, mCon))
-                {
+                SqlDataAdapter mDa = new SqlDataAdapter(pCommandText, mCon);
+              
                     DataSet mDs = new DataSet();
                     mDa.Fill(mDs);
 
                     return mDs;
-                }
+                
             }
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                if(mCon.State != ConnectionState.Closed)
+                    mCon.Close();
             }
         }
         public int ExecuteNonQuery(string pCommandText)
         {
             try
             {
-                using (SqlCommand mComm = new SqlCommand(pCommandText, mCon))
-                {
+                SqlCommand mComm = new SqlCommand(pCommandText, mCon);
+                
                     mCon.Open();
 
                     return mComm.ExecuteNonQuery();
 
-                }
+                
             }
             catch (Exception ex)
             {
                 throw ex;
-            }     
+            }
+            finally
+            {
+                if (mCon.State != ConnectionState.Closed)
+                    mCon.Close();
+            }
         }
         public int ObtenerUltimoId(string pTabla, string pColumnaId)
         {
             try
             {
-                using (SqlCommand mComm = new SqlCommand("SELECT ISNULL(MAX(" + pColumnaId + "),0) FROM " + pTabla, mCon))
-                {
+                    SqlCommand mComm = new SqlCommand("SELECT ISNULL(MAX(" + pColumnaId + "),0) FROM " + pTabla, mCon);
+                
                     mCon.Open();
 
                     return (int)mComm.ExecuteScalar();
 
-                }
+                
             }
             catch(Exception ex)
             {
                 throw ex;
-            }          
+            }
+            finally
+            {
+                if (mCon.State != ConnectionState.Closed)
+                    mCon.Close();
+            }
         }
 
         public void Dispose()

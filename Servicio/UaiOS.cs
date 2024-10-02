@@ -12,6 +12,7 @@ namespace Servicio
     {
         private static UaiOS _Instancia;
         private Usuario _UsuarioConectado;
+        private DirectorioComponente _DirectorioActual;
 
         private UaiOS() { } 
         public static UaiOS ObtenerInstancia()
@@ -36,6 +37,7 @@ namespace Servicio
             if (mUsuarioEncontrado != null && mUsuarioEncontrado.Validar(contrasena))
             {
                 _UsuarioConectado = mUsuarioEncontrado; // Establecer el usuario conectado
+                _DirectorioActual = new DirectorioBL().ObtenerDirectorioRaizDelUsuario(_UsuarioConectado.Id); //Primer Directorio no tiene Padre_Id, por ende es el directorio raiz del usuario
                 return true; // Inicio de sesión exitoso
             }
             return false; // Error de autenticación
@@ -51,6 +53,51 @@ namespace Servicio
         public Usuario ObtenerUsuarioConectado()
         {
             return _UsuarioConectado;
+        }
+
+        public DirectorioComponente ObtenerDirectorioActual()
+        {
+            return _DirectorioActual;
+        }
+
+        private string ConstruirRutaDesdeDirectorio(DirectorioComponente pNuevoDirectorioActual)
+        {
+            var ruta = new List<string>();
+
+            DirectorioComponente mDirectorioPuntero = pNuevoDirectorioActual;
+
+            // Recorremos los directorios desde el actual hasta el directorio que no tiene padre (raiz)
+
+            while(mDirectorioPuntero != null)
+            {
+                // Insertamos el nombre del directorio actual al inicio de la lista
+                ruta.Insert(0, mDirectorioPuntero.Nombre);
+
+                // Subimos al directorio padre
+                if(mDirectorioPuntero is DirectorioComposite mDirectorioComposite && mDirectorioComposite.PadreId != null)
+                {
+                    mDirectorioPuntero = new DirectorioBL().ObtenerPorId((int)mDirectorioComposite.PadreId);
+                }
+                else
+                {
+                    // En caso de ser DirectorioComponente o archivo, se termina el bucle
+                    break;
+                }
+            }
+
+            // Unimos los nombres de los directorios con '/' para la ruta
+            return string.Join(@"\", ruta);
+        }
+        public string ObtenerRuta()
+        {
+            // Construir la ruta desde el directorio raíz hasta el directorio actual
+            return $@"{_UsuarioConectado.Nombre}\{ConstruirRutaDesdeDirectorio(_DirectorioActual)}> ";
+        }
+
+        public void CambiarDirectorio(DirectorioComponente pNuevoDirectorioActual)
+        {
+            _DirectorioActual = pNuevoDirectorioActual;
+
         }
 
 

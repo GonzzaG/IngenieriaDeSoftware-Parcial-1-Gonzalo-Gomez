@@ -40,13 +40,18 @@ namespace BEL
             _Componentes.Remove(pComponente);
         }
 
+        public List<DirectorioComponente> ObtenerComponentes()
+        {
+            return _Componentes;
+        }
         public override int ObtenerTamano()
         {
             return _Componentes.Sum(c => c.ObtenerTamano());
         }
-        public List<DirectorioComponente> ListarComponentes()
+        public List<DirectorioComponente> ListarComponentes(List<DirectorioComponente> mLista)
         {
-            return _Componentes;
+            return _Componentes = mLista;
         }
+
     }
 }

@@ -30,12 +30,12 @@ namespace DAL
         }
 
         #region Métodos basicos Guardar, Eliminar, Listar, Obtener
-        public static int Guardar(DirectorioComposite pDirectorio)
+        public static int Guardar(DirectorioComposite pDirectorio, int pUsuarioId)
         {
             if (pDirectorio.Id == 0) // no existe, Insertar
             {
                 pDirectorio.Id = ProximoId();
-                string mCommandText = $"INSERT INTO Directorio (Directorio_Id, Directorio_Nombre, Padre_Id) VALUES ({pDirectorio.Id}, '{pDirectorio.Nombre}', {pDirectorio.PadreId})";
+                string mCommandText = $"INSERT INTO Directorio (Directorio_Id, Directorio_Nombre, Usuario_Id, Padre_Id) VALUES ({pDirectorio.Id}, '{pDirectorio.Nombre}', {pUsuarioId}, {pDirectorio.PadreId})";
                 return new DAO().ExecuteNonQuery(mCommandText);
             }
             else // ya existe, modificar
@@ -51,11 +51,11 @@ namespace DAL
             new DAO().ExecuteNonQuery(mCommandText);
         }
 
-        public static List<DirectorioComposite> Listar(int pPadreId)
+        public static List<DirectorioComponente> Listar(int pPadreId)
         {
             string mCommandText = "SELECT * FROM Directorio WHERE Padre_Id = " + pPadreId;
             DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
-            List<DirectorioComposite> listDirectorios = new List<DirectorioComposite>();
+            List<DirectorioComponente> listDirectorios = new List<DirectorioComponente>();
             foreach (DataRow mDr in mDs.Tables[0].Rows)
             {
                 DirectorioComposite pDirectorio = new DirectorioComposite();
@@ -82,6 +82,37 @@ namespace DAL
         }
         #endregion
 
+        public static DirectorioComposite ObtenerPorId(int pId)
+        {
+            string mCommandText = $"SELECT * FROM Directorio WHERE Directorio_Id = {pId}";
+            DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
+            if (mDs.Tables.Count > 0 && mDs.Tables[0].Rows.Count > 0)
+            {
+                DirectorioComposite mDirectorio = new DirectorioComposite();
+                ValorizarEntidad(mDirectorio, mDs.Tables[0].Rows[0]);
+                return mDirectorio;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static DirectorioComposite ObtenerDirectorioRaizDelUsuario(int pUsuarioId)
+        {
+            string mCommandText = $"SELECT * FROM Directorio WHERE Usuario_Id = {pUsuarioId}  AND Padre_Id IS NULL";
+            DataSet mDs = new DAO().ExecuteDataSet(mCommandText);
+            if (mDs.Tables.Count > 0 && mDs.Tables[0].Rows.Count > 0)
+            {
+                DirectorioComposite mDirectorio = new DirectorioComposite();
+                ValorizarEntidad(mDirectorio, mDs.Tables[0].Rows[0]);
+                return mDirectorio;
+            }
+            else
+            {
+                return null;
+            }
+        }
         // Se obtiene un directorio por su nombre y segun el id del padre, osea en el contexto en el que se encuentra
         public static DirectorioComposite ObtenerPorNombre(string pNombredirectorio, int pDirectorioActualId)
         {

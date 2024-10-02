@@ -6,7 +6,7 @@ namespace UIOS
 {
     class Program
     {
-        private static Usuario usuarioActual;
+       //private static Usuario usuarioActual;
         static string mNombreUsuario;
         static string mContrasena;
 
@@ -27,7 +27,7 @@ namespace UIOS
             Console.WriteLine("Bienvenido a UaiOS. Por favor, inicie sesión.");
 
             // Mostrar ruta actual y permitir comandos
-            EjecutarComandos();
+            EjecutarComandos(mSistemaOperativo);
         }
 
         static bool IniciarSesion(UaiOS pOS)
@@ -42,12 +42,14 @@ namespace UIOS
             return pOS.IniciarSesion(mNombreUsuario, mContrasena);
         }
 
-        private static void EjecutarComandos()
+        private static void EjecutarComandos(UaiOS pSistemaOperativo)
         {
+            IComando mComandoActual = null;
             string mComando;
             while (true)
             {
-                Console.Write($"{usuarioActual.Nombre}/{usuarioActual.DirectorioRaiz.Nombre}> ");
+                Console.Write(pSistemaOperativo.ObtenerRuta());
+                //ListamosLosComponentes en el directorio actual
                 mComando = Console.ReadLine();
 
                 // Separar el comando y los argumentos
@@ -61,23 +63,45 @@ namespace UIOS
                         if (partesComando.Length < 2)
                         {
                             Console.WriteLine("Uso: MD nombredirectorio");
+                            
                             break;
                         }
                         string nuevoDirectorio = partesComando[1];
+                        mComandoActual = new ComandoMD(pSistemaOperativo);
+                        mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());   
+
                         CrearDirectorio(nuevoDirectorio);
                         break;
 
-                    case "CD":
+                    case "CD": 
                         // Cambiar a otro directorio
                         if (partesComando.Length < 2)
                         {
                             Console.WriteLine("Uso: CD nombredirectorio");
                             break;
                         }
+                        
+                        mComandoActual = new ComandoCD(pSistemaOperativo);
+                        mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
+
                         string directorioDestino = partesComando[1];
                         CambiarDirectorio(directorioDestino);
                         break;
 
+                    case "CD..":
+                        // Retroceder al directorio padre
+                        if (partesComando.Length < 2)
+                        {
+                            Console.WriteLine("Uso: CD nombredirectorio");
+                            break;
+                        }
+
+                        mComandoActual = new ComandoCDBack(pSistemaOperativo);
+                        mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
+
+                        string directorioDestino = partesComando[1];
+                        CambiarDirectorio(directorioDestino);
+                        break;
                     case "MF":
                         // Crear un nuevo archivo
                         if (partesComando.Length < 3)

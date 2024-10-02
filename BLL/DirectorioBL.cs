@@ -10,12 +10,12 @@ namespace BLL
 {
     public class DirectorioBL
     {
-        public int CrearDirectorio(DirectorioComposite pDirectorio)
+        public int CrearDirectorio(DirectorioComposite pDirectorio, int pUsuarioId)
         {
             //verifico si existe en la Base de datos
             if(DirectorioCompositeDAL.Obtener(pDirectorio.Id, (int)pDirectorio.PadreId) == null)
             {
-                return DirectorioCompositeDAL.Guardar(pDirectorio);
+                return DirectorioCompositeDAL.Guardar(pDirectorio, pUsuarioId);
             }
             else
             {
@@ -29,7 +29,7 @@ namespace BLL
             return;
         }
 
-        public List<DirectorioComposite> ListarDirectorios(int pDirectorioPadreId)
+        public List<DirectorioComponente> ListarDirectorios(int pDirectorioPadreId)
         {
             return DirectorioCompositeDAL.Listar(pDirectorioPadreId);
         }
@@ -37,6 +37,21 @@ namespace BLL
         public DirectorioComposite Obtener(int pId, int pPadreId)
         {
             return DirectorioCompositeDAL.Obtener(pId, pPadreId); 
+        }
+
+        public DirectorioComposite ObtenerPorId(int pId)
+        {
+            return DirectorioCompositeDAL.ObtenerPorId(pId);
+        }
+
+        public DirectorioComposite ObtenerDirectorioRaizDelUsuario(int pUsuarioId)
+        {
+            return DirectorioCompositeDAL.ObtenerDirectorioRaizDelUsuario(pUsuarioId);
+        }
+
+        public DirectorioComposite ObtenerPorNombre(string pNombredirectorio, int pDirectorioActualId)
+        {
+            return DirectorioCompositeDAL.ObtenerPorNombre(pNombredirectorio, pDirectorioActualId);
         }
 
         public void CambiarDirectorio(string pNombreDirectorio, int pDirectorioActualId)
