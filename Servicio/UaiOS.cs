@@ -2,9 +2,6 @@
 using BLL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Servicio
 {
@@ -14,14 +11,16 @@ namespace Servicio
         private Usuario _UsuarioConectado;
         private DirectorioComponente _DirectorioActual;
 
-        private UaiOS() { } 
+        private UaiOS()
+        { }
+
         public static UaiOS ObtenerInstancia()
         {
-            if(_Instancia == null) // Verificamos que no haya una instancia creada
+            if (_Instancia == null) // Verificamos que no haya una instancia creada
             {
-                lock(typeof(UaiOS)) // Se bloquea el tipo UaiOS para garantizar exclusividad en esta creacion
+                lock (typeof(UaiOS)) // Se bloquea el tipo UaiOS para garantizar exclusividad en esta creacion
                 {
-                    if( _Instancia == null) // Doble verificacion de bloqueo
+                    if (_Instancia == null) // Doble verificacion de bloqueo
                     {
                         _Instancia = new UaiOS();
                     }
@@ -31,13 +30,21 @@ namespace Servicio
         }
 
         public bool IniciarSesion(string nombre, string contrasena)
-        { 
+        {
             Usuario mUsuarioEncontrado = new UsuarioBL().ObtenerPorNombreYContrasena(nombre, contrasena);
 
             if (mUsuarioEncontrado != null && mUsuarioEncontrado.Validar(contrasena))
             {
                 _UsuarioConectado = mUsuarioEncontrado; // Establecer el usuario conectado
                 _DirectorioActual = new DirectorioBL().ObtenerDirectorioRaizDelUsuario(_UsuarioConectado.Id); //Primer Directorio no tiene Padre_Id, por ende es el directorio raiz del usuario
+                
+                if(_DirectorioActual == null)
+                {
+                    _DirectorioActual = new DirectorioComposite { PadreId = null};
+                   new DirectorioBL().CrearDirectorioRaiz((DirectorioComposite)_DirectorioActual, _UsuarioConectado.Id);
+                   _DirectorioActual = new DirectorioBL().ObtenerDirectorioRaizDelUsuario(_UsuarioConectado.Id);
+                }
+
                 return true; // Inicio de sesión exitoso
             }
             return false; // Error de autenticación
@@ -46,7 +53,7 @@ namespace Servicio
         // Metodo para conectar un usuario
         public void ConectarUsuario(Usuario pUsuario)
         {
-            _UsuarioConectado = pUsuario;    
+            _UsuarioConectado = pUsuario;
         }
 
         // Metodo que obtiene el usuario conectado
@@ -60,10 +67,9 @@ namespace Servicio
             return _DirectorioActual;
         }
 
-        public int ObtenerTamanoDirectorio(DirectorioComponente pDirectorio)
-        {
-            
-        }
+        // public int ObtenerTamanoDirectorio(DirectorioComponente pDirectorio)
+        //{
+        //}
 
         private string ConstruirRutaDesdeDirectorio(DirectorioComponente pNuevoDirectorioActual)
         {
@@ -73,13 +79,13 @@ namespace Servicio
 
             // Recorremos los directorios desde el actual hasta el directorio que no tiene padre (raiz)
 
-            while(mDirectorioPuntero != null)
+            while (mDirectorioPuntero != null)
             {
                 // Insertamos el nombre del directorio actual al inicio de la lista
                 ruta.Insert(0, mDirectorioPuntero.Nombre);
 
                 // Subimos al directorio padre
-                if(mDirectorioPuntero is DirectorioComposite mDirectorioComposite && mDirectorioComposite.PadreId != null)
+                if (mDirectorioPuntero is DirectorioComposite mDirectorioComposite && mDirectorioComposite.PadreId != null)
                 {
                     mDirectorioPuntero = new DirectorioBL().ObtenerPorId((int)mDirectorioComposite.PadreId);
                 }
@@ -93,6 +99,7 @@ namespace Servicio
             // Unimos los nombres de los directorios con '/' para la ruta
             return string.Join(@"\", ruta);
         }
+
         public string ObtenerRuta()
         {
             // Construir la ruta desde el directorio raíz hasta el directorio actual
@@ -102,9 +109,14 @@ namespace Servicio
         public void CambiarDirectorio(DirectorioComponente pNuevoDirectorioActual)
         {
             _DirectorioActual = pNuevoDirectorioActual;
-
         }
 
+        public void DesconectarUsuario()
+        {
+            _UsuarioConectado = null;
+            _DirectorioActual = null;
 
+            Console.WriteLine("Sesion cerrada");
+        }
     }
 }

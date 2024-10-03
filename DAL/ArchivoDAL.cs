@@ -1,36 +1,36 @@
 ﻿using BEL;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
     public class ArchivoDAL
     {
-        static int mId;
+        private static int mId;
+
         #region Métodos privados
+
         private static void ValorizarEntidad(Archivo pArchivo, DataRow pDr)
         {
             pArchivo.Id = (int)pDr["Archivo_Id"];
             pArchivo.Nombre = pDr["Archivo_Nombre"].ToString();
-            pArchivo.Tamano = (int)pDr["Archivo_Tamano"];
             pArchivo.DirectorioId = (int)pDr["Directorio_Id"];
+            pArchivo.Tamano = float.Parse(pDr["Archivo_Tamano"].ToString());
         }
-        #endregion
+
+        #endregion Métodos privados
 
         public static int ProximoId()
         {
             if (mId == 0)
-                mId = new DAO().ObtenerUltimoId("Archivo", "Archivo_Id") + 1;
+                mId = new DAO().ObtenerUltimoId("Archivo", "Archivo_Id");
 
+            mId += 1;
             return mId;
         }
 
         #region Métodos públicos
+
         public static int Guardar(Archivo pArchivo)
         {
             if (pArchivo.Id == 0) // no existe, Insertar
@@ -81,7 +81,8 @@ namespace DAL
                 return null;
             }
         }
-        #endregion
+
+        #endregion Métodos públicos
 
         public static Archivo ObtenerPorNombre(string pArchivo, int pDirectorioId)
         {
@@ -98,6 +99,5 @@ namespace DAL
                 return null;
             }
         }
-
     }
 }

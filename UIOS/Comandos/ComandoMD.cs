@@ -1,13 +1,9 @@
 ﻿using BEL;
 using BLL;
 using Servicio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UIOS.Abstracciones;
 
-namespace UIOS
+namespace UIOS.Comandos
 {
     public class ComandoMD : IComando
     {
@@ -20,7 +16,7 @@ namespace UIOS
 
         public void Ejecutar(string[] pArgumentos)
         {
-            if(pArgumentos.Length != 1)
+            if (pArgumentos.Length != 1)
             {
                 Console.WriteLine("Uso: MD nombreDirectorio");
                 return;
@@ -31,7 +27,7 @@ namespace UIOS
 
             DirectorioComponente mDirectorioActual = _uaiOS.ObtenerDirectorioActual();
 
-            // validamos si existe ya un directorio con ese nombre    
+            // validamos si existe ya un directorio con ese nombre
             if (new DirectorioBL().ObtenerPorNombre(mNombreDirectorio, mDirectorioActual.Id) != null)
             {
                 Console.WriteLine("Error: El directorio ya existe.");

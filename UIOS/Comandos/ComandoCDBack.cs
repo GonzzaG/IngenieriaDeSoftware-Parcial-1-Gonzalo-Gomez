@@ -1,13 +1,9 @@
 ﻿using BEL;
 using BLL;
 using Servicio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UIOS.Abstracciones;
 
-namespace UIOS
+namespace UIOS.Comandos
 {
     internal class ComandoCDBack : IComando
     {
@@ -40,18 +36,16 @@ namespace UIOS
                 DirectorioComposite mDirectorioPadre = new DirectorioBL().ObtenerPorId((int)mDirectorioActual.PadreId);
 
                 // Validamos si realmente existe en la base de datos el directorio padre
-                if(mDirectorioPadre == null)
+                if (mDirectorioPadre == null)
                 {
                     Console.WriteLine("Ya se encuentra en el directorio raiz.");
                 }
                 else
                 {
-
                     _UaiOS.CambiarDirectorio(mDirectorioPadre);
                     Console.WriteLine("Retrocedio un directorio");
                 }
             }
-
         }
     }
 }

@@ -1,53 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
+using System.Data.SqlClient;
 
 namespace DAL
 {
     public class DAO : IDisposable
     {
-        SqlConnection mCon = new SqlConnection("Data Source=.;Initial Catalog=ISParcial;Integrated Security=True");
-
+        private SqlConnection mCon = new SqlConnection("Data Source=.;Initial Catalog=ISParcial;Integrated Security=True");
 
         public DataSet ExecuteDataSet(string pCommandText)
         {
             try
             {
                 SqlDataAdapter mDa = new SqlDataAdapter(pCommandText, mCon);
-              
-                    DataSet mDs = new DataSet();
-                    mDa.Fill(mDs);
 
-                    return mDs;
-                
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if(mCon.State != ConnectionState.Closed)
-                    mCon.Close();
-            }
-        }
-        public int ExecuteNonQuery(string pCommandText)
-        {
-            try
-            {
-                SqlCommand mComm = new SqlCommand(pCommandText, mCon);
-                
-                    mCon.Open();
+                DataSet mDs = new DataSet();
+                mDa.Fill(mDs);
 
-                    return mComm.ExecuteNonQuery();
-
-                
+                return mDs;
             }
             catch (Exception ex)
             {
@@ -59,19 +29,39 @@ namespace DAL
                     mCon.Close();
             }
         }
+
+        public int ExecuteNonQuery(string pCommandText)
+        {
+            try
+            {
+                SqlCommand mComm = new SqlCommand(pCommandText, mCon);
+
+                mCon.Open();
+
+                return mComm.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (mCon.State != ConnectionState.Closed)
+                    mCon.Close();
+            }
+        }
+
         public int ObtenerUltimoId(string pTabla, string pColumnaId)
         {
             try
             {
-                    SqlCommand mComm = new SqlCommand("SELECT ISNULL(MAX(" + pColumnaId + "),0) FROM " + pTabla, mCon);
-                
-                    mCon.Open();
+                SqlCommand mComm = new SqlCommand("SELECT ISNULL(MAX(" + pColumnaId + "),0) FROM " + pTabla, mCon);
 
-                    return (int)mComm.ExecuteScalar();
+                mCon.Open();
 
-                
+                return (int)mComm.ExecuteScalar();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

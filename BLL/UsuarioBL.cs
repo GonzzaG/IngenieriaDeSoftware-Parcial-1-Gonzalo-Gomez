@@ -1,10 +1,6 @@
 ﻿using BEL;
 using DAL;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -23,7 +19,7 @@ namespace BLL
 
         public List<Usuario> Listar()
         {
-            return UsuarioDAL.Listar(); 
+            return UsuarioDAL.Listar();
         }
 
         public Usuario Obtener(int pId)
@@ -35,7 +31,5 @@ namespace BLL
         {
             return UsuarioDAL.ObtenerPorNombreYContrasena(pNombre, pContrasena);
         }
-
-
     }
 }

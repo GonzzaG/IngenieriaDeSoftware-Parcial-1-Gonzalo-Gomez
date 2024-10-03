@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace BEL
 {
@@ -11,9 +7,12 @@ namespace BEL
     {
         // Agregacion de componentes con mas directorios o archivos
         private List<DirectorioComponente> _Componentes = new List<DirectorioComponente>();
+
         public int? PadreId { get; set; }
 
-        public DirectorioComposite() { }
+        public DirectorioComposite()
+        { }
+
         public DirectorioComposite(string pNombre)
         {
             Nombre = pNombre;
@@ -22,7 +21,7 @@ namespace BEL
         public override void MostrarEstructura(int pNivel)
         {
             Console.WriteLine($"{new string(' ', pNivel * 2)}+ {Nombre}/");
-            foreach(var Componente in _Componentes)
+            foreach (var Componente in _Componentes)
             {
                 Componente.MostrarEstructura(pNivel + 1);
             }
@@ -44,14 +43,40 @@ namespace BEL
         {
             return _Componentes;
         }
-        public override int ObtenerTamano()
-        {
-            return _Componentes.Sum(c => c.ObtenerTamano());
-        }
+
         public List<DirectorioComponente> ListarComponentes(List<DirectorioComponente> mLista)
         {
             return _Componentes = mLista;
         }
 
+        public override float ObtenerTamano(List<DirectorioComponente> mLista)
+        {
+            float Tamano = 0;
+            return CalcularTamano(mLista, Tamano);
+        }
+
+        public float CalcularTamano(List<DirectorioComponente> mLista, float pTamano)
+        {
+            foreach (DirectorioComponente mComponente in mLista)
+            {
+                // Validamos si es un Archivo (hoja) sumamos su tamano al total
+                if (mComponente is Archivo a)
+                {
+                    pTamano += a.Tamano;
+                }
+                //Si no es archivo, es un directorio, lo que significa que puede contener mas directorios y archivos,
+                //asi que realizamos recursividad
+                else
+                {
+                    //Si es composite, recursividad para calcular tamano de sus componentes
+                    if (mComponente is DirectorioComposite DC)
+                    {
+                        CalcularTamano(DC._Componentes, pTamano);
+                    }
+                }
+            }
+
+            return pTamano;
+        }
     }
 }

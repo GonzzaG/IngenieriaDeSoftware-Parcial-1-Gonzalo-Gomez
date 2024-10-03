@@ -1,14 +1,9 @@
 ﻿using BEL;
 using BLL;
-using DAL;
 using Servicio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UIOS.Abstracciones;
 
-namespace UIOS
+namespace UIOS.Comandos
 {
     internal class ComandoMF : IComando
     {
@@ -27,7 +22,6 @@ namespace UIOS
                 return;
             }
 
-
             string mNombreArchivo = pArgumentos[0];
 
             // Verificamos si la posicion 1 de argumentos es un int (va el tamano)
@@ -41,7 +35,7 @@ namespace UIOS
             DirectorioComposite mDirectorioActual = (DirectorioComposite)_UaiOS.ObtenerDirectorioActual();
 
             //OPCION 2
-     
+
             // Buscamos si existe un archivo con el nombre que se coloco, perteneciente al id del directorio actual
             if (new ArchivoBL().ObtenerPorNombre(pArgumentos[0], mDirectorioActual.Id) != null)
             {
@@ -61,7 +55,6 @@ namespace UIOS
             var mDirectorioBL = new ArchivoBL().Guardar(mNuevoArchivo);
             mDirectorioActual.Agregar(mNuevoArchivo);
             Console.WriteLine($"Archivo '{mNuevoArchivo.Nombre}' creado satisfactoriamente.");
-
         }
     }
 }

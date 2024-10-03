@@ -1,14 +1,9 @@
 ﻿using BEL;
 using BLL;
 using Servicio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using UIOS.Abstracciones;
 
-namespace UIOS
+namespace UIOS.Comandos
 {
     internal class ComandoCD : IComando
     {
@@ -32,15 +27,15 @@ namespace UIOS
             DirectorioComposite mDirectorioActual = (DirectorioComposite)_UaiOS.ObtenerDirectorioActual();
             DirectorioComposite mNuevoDirectorio = null;
 
-            mDirectorioActual.ListarComponentes(new DirectorioBL().ListarComponentes(mDirectorioActual.Id));
+            mDirectorioActual.ListarComponentes(new DirectorioBL().ListarDirectorios(mDirectorioActual.Id));
             // Se recorren los componentes del directorio actual para verificar si existe el archivo buscado
             // con ese nombre
             foreach (DirectorioComposite pComponente in mDirectorioActual.ObtenerComponentes())
             {
-                if(pComponente is DirectorioComposite mDir)
-                { 
+                if (pComponente is DirectorioComposite mDir)
+                {
                     // Se compara si los nombres son iguales, sin importar mayusculas ni minusculas
-                    if(mDir.Nombre.Equals(mNombreDirectorio, StringComparison.OrdinalIgnoreCase))
+                    if (mDir.Nombre.Equals(mNombreDirectorio, StringComparison.OrdinalIgnoreCase))
                     {
                         // Se guarda el directorio con el nombre buscado en el nuevo directorio
                         mNuevoDirectorio = mDir;
@@ -50,7 +45,7 @@ namespace UIOS
             }
 
             // Si no existe, notificamos
-            if(mNuevoDirectorio == null)
+            if (mNuevoDirectorio == null)
             {
                 Console.WriteLine($"Error: El directorio '{mNombreDirectorio}' no existe.");
                 return;

@@ -1,36 +1,30 @@
-﻿using BEL;
-using BLL;
-using Servicio;
+﻿using Servicio;
+using UIOS.Abstracciones;
+using UIOS.Comandos;
 
 namespace UIOS
 {
-    class Program
+    internal class Program
     {
-       //private static Usuario usuarioActual;
-        static string mNombreUsuario;
-        static string mContrasena;
+        //private static Usuario usuarioActual;
+        private static string mNombreUsuario;
 
-        static void Main(string[] args)
+        private static string mContrasena;
+
+        private static void Main()
         {
             // Verificar y obtener la instancia del sistema operativo con singleton de la capa de servicio
             UaiOS mSistemaOperativo = UaiOS.ObtenerInstancia();
+            Console.WriteLine($"Bienvenido a UaiOS!\n\n");
 
-            if (IniciarSesion(mSistemaOperativo))
-            {
-                Console.WriteLine($"Inicio de sesion correcto, Bienvenido a UaiOS {mNombreUsuario}");
-            }
-            else
-            {
-                Console.WriteLine("Inicio de sesión fallido. Por favor, intente de nuevo.");
-            }
-
-            Console.WriteLine("Bienvenido a UaiOS. Por favor, inicie sesión.");
+            // Inicio de sesion con la instancia del sistema operativo
+            IniciarSesion(mSistemaOperativo);
 
             // Mostrar ruta actual y permitir comandos
             EjecutarComandos(mSistemaOperativo);
         }
 
-        static bool IniciarSesion(UaiOS pOS)
+        private static void IniciarSesion(UaiOS pOS)
         {
             Console.Write("Nombre de usuario: ");
             mNombreUsuario = Console.ReadLine();
@@ -39,7 +33,19 @@ namespace UIOS
             mContrasena = Console.ReadLine();
 
             //valida el usuario en la capa de servicio
-            return pOS.IniciarSesion(mNombreUsuario, mContrasena);
+            if (!pOS.IniciarSesion(mNombreUsuario, mContrasena))
+            {
+                Console.Clear();
+                Console.WriteLine($"Bienvenido a UaiOS!\n");
+                Console.WriteLine("Inicio de sesión fallido. Por favor, intente de nuevo.");
+
+                // Funcion recursiva para volver a intentar el inicio de sesion
+                IniciarSesion(pOS);
+            }
+            Console.Clear();
+            Console.WriteLine($"Bienvenido a UaiOS!\n");
+            Console.WriteLine($"Inicio de sesión exitoso. Hola {mNombreUsuario}!");
+            return;
         }
 
         private static void EjecutarComandos(UaiOS pSistemaOperativo)
@@ -63,24 +69,23 @@ namespace UIOS
                         if (partesComando.Length < 2)
                         {
                             Console.WriteLine("Uso: MD nombredirectorio");
-                            
+
                             break;
                         }
                         string nuevoDirectorio = partesComando[1];
                         mComandoActual = new ComandoMD(pSistemaOperativo);
-                        mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());   
+                        mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
 
-                        CrearDirectorio(nuevoDirectorio);
                         break;
 
-                    case "CD": 
+                    case "CD":
                         // Cambiar a otro directorio
                         if (partesComando.Length < 2)
                         {
                             Console.WriteLine("Uso: CD nombredirectorio");
                             break;
                         }
-                        
+
                         mComandoActual = new ComandoCD(pSistemaOperativo);
                         mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
 
@@ -88,15 +93,16 @@ namespace UIOS
 
                     case "CD..":
                         // Retroceder al directorio padre
-                        if(partesComando.Length > 2)
+                        if (partesComando.Length > 1)
                         {
-                            Console.WriteLine("Uso: CD nombredirectorio");
+                            Console.WriteLine("Uso: CD..");
                         }
 
                         mComandoActual = new ComandoCDBack(pSistemaOperativo);
                         mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
-                        
+
                         break;
+
                     case "MF":
                         // Crear un nuevo archivo
                         if (partesComando.Length < 3)
@@ -106,11 +112,11 @@ namespace UIOS
                         }
                         string mNombreArchivo = partesComando[1];
 
-                        if (int.TryParse(partesComando[2], out int tamañoArchivo))
+                        if (float.TryParse(partesComando[2], out float tamañoArchivo))
                         {
                             mComandoActual = new ComandoMF(pSistemaOperativo);
                             mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
-                            CrearArchivo(mNombreArchivo, tamañoArchivo);
+          
                         }
                         else
                         {
@@ -119,14 +125,28 @@ namespace UIOS
                         break;
 
                     case "LS":
-                        // Listar archivos y directorios
-                        ListarArchivosYDirectorios();
+                        // Retroceder al directorio padre
+                        if (partesComando.Length > 1)
+                        {
+                            Console.WriteLine("Uso: LS");
+                        }
+
+                        mComandoActual = new ComandoLS(pSistemaOperativo);
+                        mComandoActual.Ejecutar(partesComando.Skip(1).ToArray());
+
                         break;
 
                     case "DI":
                         // Desconectarse del sistema operativo
                         Console.WriteLine("Desconectándose...");
+                        Console.Clear();
+                        // Volvemos al main para iniciar sesion.
+                        Main();
                         return;
+
+                    case "CLEAR":
+                        Console.Clear();
+                        break;
 
                     default:
                         Console.WriteLine("Comando no reconocido.");
@@ -135,28 +155,5 @@ namespace UIOS
             }
         }
 
-        private static void CrearDirectorio(string nombre)
-        {
-            // Aquí deberías implementar la lógica para crear un directorio
-            Console.WriteLine($"Directorio '{nombre}' creado.");
-        }
-
-        private static void CambiarDirectorio(string nombre)
-        {
-            // Aquí deberías implementar la lógica para cambiar de directorio
-            Console.WriteLine($"Cambiado al directorio '{nombre}'.");
-        }
-
-        private static void CrearArchivo(string nombre, int tamaño)
-        {
-            // Aquí deberías implementar la lógica para crear un archivo
-            Console.WriteLine($"Archivo '{nombre}' creado con tamaño {tamaño} bytes.");
-        }
-
-        private static void ListarArchivosYDirectorios()
-        {
-            // Aquí deberías implementar la lógica para listar archivos y directorios
-            Console.WriteLine("Listando archivos y directorios...");
-        }
     }
 }

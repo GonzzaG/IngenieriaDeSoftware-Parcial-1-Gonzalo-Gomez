@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BEL
+﻿namespace BEL
 {
     public class Usuario
     {
         public int Id { get; set; }
         public string _nombre { get; set; }
         public string _contrasena { get; set; }
-        public DirectorioComponente DirectorioRaiz {  get; set; }
+        public DirectorioComponente DirectorioRaiz { get; set; }
 
         public string Nombre
         {
@@ -25,7 +19,9 @@ namespace BEL
             private set { _contrasena = value; }
         }
 
-        public Usuario() { }
+        public Usuario()
+        { }
+
         public Usuario(string pNombre, string pContrasena)
         {
             Nombre = pNombre;
@@ -43,7 +39,7 @@ namespace BEL
             _contrasena = pContrasena;
         }
 
-        public bool Validar (string pContrasena)
+        public bool Validar(string pContrasena)
         {
             return Contrasena == pContrasena;
         }
@@ -55,13 +51,9 @@ namespace BEL
                 DirectorioRaiz.MostrarEstructura(0);
             }
         }
-        
-
 
         public void CambiarContrasena()
         {
-
         }
-
     }
 }

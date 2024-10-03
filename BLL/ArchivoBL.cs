@@ -1,10 +1,6 @@
 ﻿using BEL;
 using DAL;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL
 {
@@ -27,7 +23,6 @@ namespace BLL
             return ArchivoDAL.Listar(pDirectorioId);
         }
 
-
         public Archivo Obtener(int pId, int pPadreId)
         {
             return ArchivoDAL.Obtener(pId, pPadreId);
@@ -35,7 +30,7 @@ namespace BLL
 
         public Archivo ObtenerPorNombre(string pArchivo, int pPadreId)
         {
-            return ArchivoDAL.ObtenerPorNombre(pArchivo, pPadreId); 
+            return ArchivoDAL.ObtenerPorNombre(pArchivo, pPadreId);
         }
     }
 }
