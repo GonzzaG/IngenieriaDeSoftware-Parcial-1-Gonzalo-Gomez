@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archivo.cs" />
+    <Compile Include="BL.cs" />
     <Compile Include="DirectorioComponente.cs" />
     <Compile Include="DirectorioComposite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

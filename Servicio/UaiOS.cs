@@ -67,10 +67,6 @@ namespace Servicio
             return _DirectorioActual;
         }
 
-        // public int ObtenerTamanoDirectorio(DirectorioComponente pDirectorio)
-        //{
-        //}
-
         private string ConstruirRutaDesdeDirectorio(DirectorioComponente pNuevoDirectorioActual)
         {
             var ruta = new List<string>();
@@ -78,7 +74,6 @@ namespace Servicio
             DirectorioComponente mDirectorioPuntero = pNuevoDirectorioActual;
 
             // Recorremos los directorios desde el actual hasta el directorio que no tiene padre (raiz)
-
             while (mDirectorioPuntero != null)
             {
                 // Insertamos el nombre del directorio actual al inicio de la lista
@@ -111,7 +106,7 @@ namespace Servicio
             _DirectorioActual = pNuevoDirectorioActual;
         }
 
-        public void DesconectarUsuario()
+        public void LogOut()
         {
             _UsuarioConectado = null;
             _DirectorioActual = null;

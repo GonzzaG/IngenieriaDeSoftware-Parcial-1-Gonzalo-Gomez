@@ -17,7 +17,7 @@ namespace UIOS.Comandos
             Console.WriteLine("Desconectandose del UAI Sistema Operativo...");
 
             // Limpiamos el usuario y directorio actual del sistema operativo
-            _UaiOS.DesconectarUsuario();
+            _UaiOS.LogOut();
         }
     }
 }

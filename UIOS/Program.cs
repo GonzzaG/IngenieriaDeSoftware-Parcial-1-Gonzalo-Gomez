@@ -42,6 +42,7 @@ namespace UIOS
                 // Funcion recursiva para volver a intentar el inicio de sesion
                 IniciarSesion(pOS);
             }
+
             Console.Clear();
             Console.WriteLine($"Bienvenido a UaiOS!\n");
             Console.WriteLine($"Inicio de sesión exitoso. Hola {mNombreUsuario}!");
@@ -55,6 +56,7 @@ namespace UIOS
             while (true)
             {
                 Console.Write(pSistemaOperativo.ObtenerRuta());
+
                 //ListamosLosComponentes en el directorio actual
                 mComando = Console.ReadLine();
 
@@ -65,6 +67,7 @@ namespace UIOS
                 switch (nombreComando)
                 {
                     case "MD":
+
                         // Crear un nuevo directorio
                         if (partesComando.Length < 2)
                         {
@@ -79,6 +82,7 @@ namespace UIOS
                         break;
 
                     case "CD":
+
                         // Cambiar a otro directorio
                         if (partesComando.Length < 2)
                         {
@@ -92,6 +96,7 @@ namespace UIOS
                         break;
 
                     case "CD..":
+
                         // Retroceder al directorio padre
                         if (partesComando.Length > 1)
                         {
@@ -104,6 +109,7 @@ namespace UIOS
                         break;
 
                     case "MF":
+
                         // Crear un nuevo archivo
                         if (partesComando.Length < 3)
                         {
@@ -125,6 +131,7 @@ namespace UIOS
                         break;
 
                     case "LS":
+
                         // Retroceder al directorio padre
                         if (partesComando.Length > 1)
                         {
@@ -137,9 +144,11 @@ namespace UIOS
                         break;
 
                     case "DI":
+
                         // Desconectarse del sistema operativo
                         Console.WriteLine("Desconectándose...");
                         Console.Clear();
+
                         // Volvemos al main para iniciar sesion.
                         Main();
                         return;
